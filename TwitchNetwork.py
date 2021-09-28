@@ -5,15 +5,9 @@
 
 # First, install and import the proper python libraries. If your having trouble try adding '!' before the pip, like so '!pip'
 
-# In[6]:
-
 
 pip install twitchAPI
 pip install networkx[default]
-
-
-# In[7]:
-
 
 from twitchAPI.twitch import Twitch
 from pprint import pprint
@@ -21,31 +15,19 @@ import csv
 import networkx as nx
 import matplotlib.pyplot as plt
 
-
-# In[ ]:
-
-
 api_key = '45smruax3qg6qh72lnf9ykcoqm3cm5'
 oauth = 'jymak5hh67w2l9cnvmq054letjzera'
 backup_key = 'txs58of1olyox4slhk1l7pk70f3iys'
 backup_auth = 'cz4lwheyynrl8s98k0ypk25aumj577'
 
-
 # Then set the API key and authentication, and print a test to make sure that it works. If it doesn't, change the api_key and oauth variables to the backups above.
-
-# In[161]:
-
 
 twitch = Twitch(api_key, oauth)
 pprint(twitch.get_users(logins=['serenegrachay']))
 
-
 # # Get Nodes Who the User Follows
 
 # The getNodesFollows function recursively get the entire list of a user's follows
-
-# In[145]:
-
 
 #twitch.get_users_follows(from_id=203571765)
 def getNodesFollows(twitchGetUserFollows): #accepts a call to twitch api to get the users follows from a certain id
@@ -61,17 +43,10 @@ def getNodesFollows(twitchGetUserFollows): #accepts a call to twitch api to get 
 
     return following_ids
 
-
-# In[146]:
-
-
 following_ids = getNodesFollows(twitch.get_users_follows(from_id=203571765))
 
 
 # # Get User's Follower Nodes
-
-# In[147]:
-
 
 #twitch.get_users_follows(to_id=203571765)
 def getNodesFollowers(twitchGetUserFollowers): #accepts a call to twitch api to get the users follows from a certain id
@@ -86,17 +61,10 @@ def getNodesFollowers(twitchGetUserFollowers): #accepts a call to twitch api to 
 
     return follower_ids
 
-
-# In[157]:
-
-
 followers = getNodesFollowers(twitch.get_users_follows(to_id=203571765))
 
 
 # ### Merge following_ids and followers
-
-# In[154]:
-
 
 all_ids_merge = following_ids + followers #merges the ids of those you follow and who follow you
 all_ids_set = set(all_ids_merge) #Gets rid of duplicate ids
@@ -107,9 +75,6 @@ all_ids.insert(0, '203571765') #Inserts the source node, which is not automatica
 # # Graph Drawing
 
 # This method will create the graph, as well as write the nodes in pairs (one following the next) to a csv file
-
-# In[172]:
-
 
 graph = nx.DiGraph()
 def realtime_to_Graph():
@@ -125,16 +90,10 @@ def realtime_to_Graph():
                     csvwriter.writerow([i, j]) 
 
 
-# In[ ]:
-
-
 realtime_to_Graph():
 
 
 # This method will create a graph from the given csv file
-
-# In[ ]:
-
 
 graph = nx.DiGraph()
 def readCSV_to_Graph():
@@ -146,16 +105,10 @@ def readCSV_to_Graph():
                 graph.add_edges_from([(row[0], row[1])])
 
 
-# In[ ]:
-
-
 #readCSV_to_Graph() #Uncomment this if you want to create graph from csv
 
 
 # Finally we plot the graph
-
-# In[201]:
-
 
 purple = '#6c3ca3'
 
@@ -173,9 +126,6 @@ plt.show()
 
 # Here we plot the degree distribution in a histogram given NetworkX's builtin funtion
 
-# In[210]:
-
-
 degrees = [graph.degree(n) for n in graph.nodes()]
 plt.hist(degrees, edgecolor='black', linewidth=1.2, color=purple)
 plt.title('Degree Distribution')
@@ -187,9 +137,6 @@ plt.show()
 
 # Here we plot the clustering coefficient in a histogram given NetworkX's builtin funtion
 
-# In[211]:
-
-
 cluster = [nx.clustering(graph, n) for n in graph.nodes()]
 plt.hist(cluster, color=purple, edgecolor='black', linewidth=1.2)
 plt.title('Clustering Coefficient')
@@ -200,9 +147,6 @@ plt.show()
 
 
 # Here we plot the closeness centrality in a histogram given NetworkX's builtin funtion
-
-# In[213]:
-
 
 close = [nx.closeness_centrality(graph, n) for n in graph.nodes()]
 plt.hist(close, range=[0, 1], color=purple, edgecolor='black', linewidth=1.2)
